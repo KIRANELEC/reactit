@@ -1,0 +1,31 @@
+name: deploy_react.yaml
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+jobs:
+  build:
+    runs-on: self-hosted  # This will use your Ubuntu VM as a GitHub Runner
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use the appropriate Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Deploy to Ubuntu VM
+        run: |
+          # Stop existing application if running
+          sudo lsof -t -i:8100 | sudo xargs kill -9 || true
+
+          # Serve the new build on port 8100
+          npx serve -s build -l 8100 &
