@@ -2,7 +2,7 @@ name: deploy_react.yaml
 on:
   pull_request:
     branches:
-      - master
+      - main
       - develop
 jobs:
   build:
